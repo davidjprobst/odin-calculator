@@ -1,0 +1,1 @@
+This is the final project of the Odin Projects Foundation course. It's a calculator to show all the skills I learned throughout the foundations course.
