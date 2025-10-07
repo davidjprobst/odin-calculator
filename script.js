@@ -1,6 +1,26 @@
 let a = 0;
 let b = 0;
 let operator = "";
+let result = "";
+
+const inputs = document.querySelectorAll(".input");
+const display = document.querySelector("#display");
+const equals = document.querySelector("#equals");
+const clear = document.querySelector("#clear");
+
+inputs.forEach((input) => {
+    input.addEventListener("click", () => {
+        display.innerText += input.innerText;
+    });
+});
+
+equals.addEventListener("click", () => {
+    operate(2,4,"+");
+});
+
+clear.addEventListener("click", () => {
+    display.innerText = "";
+});
 
 const add = function(a, b) {
     return a + b;
@@ -19,14 +39,14 @@ const divide = function(a, b) {
 }
 
 const operate = function(a, b, operator) {
-    console.log(operator);
     if (operator === "+") {
-        return add(a, b);
+        result = add(a, b);
     } else if (operator === "-") {
-        return subtract(a, b);
+        result = subtract(a, b);
     } else if (operator === "*") {
-        return multiply(a, b);
+        result = multiply(a, b);
     } else if (operator === "/") {
-        return divide(a, b);
-    } 
+        result = divide(a, b);
+    } display.innerText = result;
 }
+
