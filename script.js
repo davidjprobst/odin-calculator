@@ -9,7 +9,7 @@ let operator = "";
 let result = "";
 let displayValue = display.innerText;
 
-const checkOperator = function(value) {
+const isOperator = function(value) {
     if (value == "+" || value == "-" || value == "*" || value == "/") {
         return true
     } else {
@@ -33,6 +33,7 @@ equals.addEventListener("click", () => {
         
         // convert string to array
         let displayArray = Array.from(displayValue);
+        let newArray = [];
 
         // iterate through displayArray
         for (let i = 0; i < displayArray.length; i++) {
@@ -40,17 +41,23 @@ equals.addEventListener("click", () => {
             let prevoiousItem = displayArray[i-1];
             let currentItem = displayArray[i];
 
+            if (i == 0) {
+                newArray.push(currentItem);
+
             // IF previousItem is NOT an operator
-            if (checkOperator(prevoiousItem) == true) {
+            } else if (isOperator(prevoiousItem) == true) {
                 // store currentItem as new array value
+                newArray.push(currentItem);
 
             // IF currentItem IS an operator
-            } else if (checkOperator(currentItem)){
+            } else if (isOperator(currentItem)){
                 // store currentItem as new array value
+                newArray.push(currentItem);
 
             // IF currentItem is NOT an operator
             } else {
                 // concat currentItem to previous value
+                newArray[newArray.length - 1] += currentItem;
 
             }
         };
