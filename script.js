@@ -8,6 +8,7 @@ let b = 0;
 let operator = "";
 let result = "";
 let displayValue = display.innerText;
+let operableArray = [];
 
 const isOperator = function(value) {
     if (value == "+" || value == "-" || value == "*" || value == "/") {
@@ -17,64 +18,27 @@ const isOperator = function(value) {
     }
 };
 
-inputs.forEach((input) => {
-    input.addEventListener("click", () => {
-        displayValue = display.innerText += input.innerText;
-    });
-});
+function getOperableArray() {
+    
+    let displayArray = Array.from(displayValue);
 
-equals.addEventListener("click", () => {
-    function getNumbers() {
-        // example: 45 + 5 * 6 - 4 / 2
-            // multiply (5*6) -> 45 + 30 - 4 / 2
-            // divide (4/2) -> 45 + 30 - 2
-            // add (45 + 30) -> 75 - 2
-            // subtract (75 - 2) -> 73
+    // create new array of numbers and operators
+    for (let i = 0; i < displayArray.length; i++) {
         
-        // convert string to array
-        let displayArray = Array.from(displayValue);
-        let newArray = [];
+        let prevoiousItem = displayArray[i-1];
+        let currentItem = displayArray[i];
 
-        // iterate through displayArray
-        for (let i = 0; i < displayArray.length; i++) {
-            //check if previous item is an operator
-            let prevoiousItem = displayArray[i-1];
-            let currentItem = displayArray[i];
-
-            if (i == 0) {
-                newArray.push(currentItem);
-
-            // IF previousItem is NOT an operator
-            } else if (isOperator(prevoiousItem) == true) {
-                // store currentItem as new array value
-                newArray.push(currentItem);
-
-            // IF currentItem IS an operator
-            } else if (isOperator(currentItem)){
-                // store currentItem as new array value
-                newArray.push(currentItem);
-
-            // IF currentItem is NOT an operator
-            } else {
-                // concat currentItem to previous value
-                newArray[newArray.length - 1] += currentItem;
-
-            }
-        };
-            // if first item
-                // store as new item in array 
-                // move on to next item
-            
-        // if previous value is blank
-        // else if operator, store as new item in array and move on
-    }
-    getNumbers();
-});
-
-clear.addEventListener("click", () => {
-    displayValue = "";
-    display.innerText = displayValue;
-});
+        if (i == 0) {
+            operableArray.push(currentItem);
+        } else if (isOperator(prevoiousItem) == true) {
+            operableArray.push(currentItem);
+        } else if (isOperator(currentItem)){
+            operableArray.push(currentItem);
+        } else {
+            operableArray[newArray.length - 1] += currentItem;
+        }
+    };
+};
 
 const add = function(a, b) {
     return a + b;
@@ -92,15 +56,50 @@ const divide = function(a, b) {
     return a / b;
 }
 
-const operate = function(a, b, operator) {
-    if (operator === "+") {
-        result = add(a, b);
-    } else if (operator === "-") {
-        result = subtract(a, b);
-    } else if (operator === "*") {
-        result = multiply(a, b);
-    } else if (operator === "/") {
-        result = divide(a, b);
-    } display.innerText = result;
+// example: 45 + 5 * 6 - 4 / 2
+    // multiply (5*6) -> 45 + 30 - 4 / 2
+    // divide (4/2) -> 45 + 30 - 2
+    // add (45 + 30) -> 75 - 2
+    // subtract (75 - 2) -> 73
+
+// Operate in PEMDAS
+// Iterate through operableArray
+    //  find multiplication symbols
+        // get previous number
+        // get following number
+        // multiply previous * following
+        // create new array with result in place of (previous * following)
+
+const operate = function(operableArray) {
+
+    // multiply two numbers in array (first * symbol)
+    let multiplierIndex = operableArray.indexOf(operableArray.find((item) => item == "*"));
+    multiply(operableArray[multiplierIndex - 1], operableArray[multiplierIndex + 1]);
+
+    // if (operator === "+") {
+    //     result = add(a, b);
+    // } else if (operator === "-") {
+    //     result = subtract(a, b);
+    // } else if (operator === "*") {
+    //     result = multiply(a, b);
+    // } else if (operator === "/") {
+    //     result = divide(a, b);
+    // } display.innerText = result;
 }
 
+inputs.forEach((input) => {
+    input.addEventListener("click", () => {
+        displayValue = display.innerText += input.innerText;
+    });
+});
+
+equals.addEventListener("click", () => {
+    getOperableArray();
+    console.log(operableArray);
+    operate(operableArray);
+});
+
+clear.addEventListener("click", () => {
+    displayValue = "";
+    display.innerText = displayValue;
+});
