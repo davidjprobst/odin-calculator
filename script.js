@@ -22,7 +22,7 @@ function getOperableArray() {
     
     let displayArray = Array.from(displayValue);
 
-    // create new array of numbers and operators
+    // CREATE new array of numbers and operators
     for (let i = 0; i < displayArray.length; i++) {
         
         let prevoiousItem = displayArray[i-1];
@@ -35,7 +35,7 @@ function getOperableArray() {
         } else if (isOperator(currentItem)){
             operableArray.push(currentItem);
         } else {
-            operableArray[newArray.length - 1] += currentItem;
+            operableArray[operableArray.length - 1] += currentItem;
         }
     };
 };
@@ -63,28 +63,74 @@ const divide = function(a, b) {
     // subtract (75 - 2) -> 73
 
 // Operate in PEMDAS
-// Iterate through operableArray
     //  find multiplication symbols
         // get previous number
         // get following number
         // multiply previous * following
-        // create new array with result in place of (previous * following)
 
 const operate = function(operableArray) {
 
-    // multiply two numbers in array (first * symbol)
+    // Multiply at first multiplication symbol, create new array, rerun
     let multiplierIndex = operableArray.indexOf(operableArray.find((item) => item == "*"));
-    multiply(operableArray[multiplierIndex - 1], operableArray[multiplierIndex + 1]);
+    if (multiplierIndex != -1) {
 
-    // if (operator === "+") {
-    //     result = add(a, b);
-    // } else if (operator === "-") {
-    //     result = subtract(a, b);
-    // } else if (operator === "*") {
-    //     result = multiply(a, b);
-    // } else if (operator === "/") {
-    //     result = divide(a, b);
-    // } display.innerText = result;
+        firstNumber = Number(operableArray[multiplierIndex - 1]);
+        secondNumber = Number(operableArray[multiplierIndex + 1]);
+
+        let product = multiply(firstNumber, secondNumber);
+        operableArray.splice((multiplierIndex - 1), 3, product);
+        console.log(operableArray);
+        operate(operableArray);
+    } else {
+        console.log("no more multiplication symbols");
+    }
+
+    // Divide at first division symbol, create new array, rerun
+    let dividerIndex = operableArray.indexOf(operableArray.find((item) => item == "/"));
+    if (dividerIndex != -1) {
+
+        firstNumber = Number(operableArray[dividerIndex - 1]);
+        secondNumber = Number(operableArray[dividerIndex + 1]);
+
+        let quotient = divide(firstNumber, secondNumber);
+        operableArray.splice((dividerIndex - 1), 3, quotient);
+        console.log(operableArray);
+        operate(operableArray);
+    } else {
+        console.log("no more division symbols");
+    }
+
+    let additionIndex = operableArray.indexOf(operableArray.find((item) => item == "+"));
+    if (additionIndex != -1) {
+
+        firstNumber = Number(operableArray[additionIndex - 1]);
+        secondNumber = Number(operableArray[additionIndex + 1]);
+
+        let sum = add(firstNumber, secondNumber);
+        operableArray.splice((additionIndex - 1), 3, sum);
+        console.log(operableArray);
+        operate(operableArray);
+    } else {
+        console.log("no more addition symbols");
+    }
+
+    let subtractionIndex = operableArray.indexOf(operableArray.find((item) => item == "-"));
+    if (subtractionIndex != -1) {
+
+        firstNumber = Number(operableArray[subtractionIndex - 1]);
+        secondNumber = Number(operableArray[subtractionIndex + 1]);
+
+        let difference = subtract(firstNumber, secondNumber);
+        operableArray.splice((subtractionIndex - 1), 3, difference);
+        console.log(operableArray);
+        operate(operableArray);
+    } else {
+        console.log("no more addition symbols");
+    }
+
+    displayValue = operableArray[0];
+    display.innerText = displayValue;
+
 }
 
 inputs.forEach((input) => {
@@ -95,7 +141,6 @@ inputs.forEach((input) => {
 
 equals.addEventListener("click", () => {
     getOperableArray();
-    console.log(operableArray);
     operate(operableArray);
 });
 
